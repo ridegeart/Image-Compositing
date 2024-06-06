@@ -3,18 +3,18 @@ import cv2
 import os
 import codecs
 
-def zomImg(impath, boxes, scale):
+def zomImg(impath, boxes):
     img = cv2.imread(impath)
     height, width, c = img.shape
 
-    resizeImg = cv2.resize(img,(int(width*scale),int(height*scale)),interpolation=cv2.INTER_LINEAR)
+    resizeImg = cv2.resize(img,(int(width),int(height)),interpolation=cv2.INTER_LINEAR)
     for i in range(len(boxes)):
-        nw = boxes[i][2] * scale
-        nh = boxes[i][3] * scale
+        nw = boxes[i][2]
+        nh = boxes[i][3]
         centerx = boxes[i][0]
         centery = boxes[i][1]
-        boxes[i][0] = (centerx * scale) if (centerx * scale) > 0 else 0
-        boxes[i][1] = (centery * scale) if (centery * scale) > 0 else 0
+        boxes[i][0] = (centerx) if (centerx) > 0 else 0
+        boxes[i][1] = (centery) if (centery) > 0 else 0
         boxes[i][2] = nw
         boxes[i][3] = nh
 
@@ -31,20 +31,36 @@ def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
     stepx = int(width / stridex)
     stepy = int(height / stridey)
     
-    for r in range(stepy-1): #stepy-1
+    for r in range(stepy-1):
         starty = r * stridey
         for c in range(stepx-1):
             startx = c * stridex
             corner_list.append((startx,starty))
             img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
-            
-    starty = 0 * stridey
-    startx = width - kernelw
-    corner_list.append((startx,starty))
-    img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
+    
+    if (width / stridex) % 1 > 0.01:
+        print('x',(width / stridex))
+        for r in range(stepy-1):
+            starty = r * stridey
+            startx = width - kernelw
+            corner_list.append((startx,starty))
+            img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
+    if (height / stridey) % 1 > 0.01:
+        print(height,stridey,(height / stridey))
+        for c in range(stepx-1):
+            startx = c * stridex
+            starty = height - kernelh
+            corner_list.append((startx,starty))
+            img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
+    if (width / stridex) % 1 > 0.01 and (height / stridey) % 1 > 0.01:
+        starty = height - kernelh
+        startx = width - kernelw
+        corner_list.append((startx,starty))
+        img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
+    
     return img_list,corner_list
 
-def crop_dataset(imgpath, scale, windows_width, srcAnn, annotation, cropAnno, savePath, sub=''):
+def crop_dataset(imgpath, windows_width, windows_height, srcAnn, annotation, cropAnno, savePath):
 
     if os.path.exists(savePath) is False:
         os.mkdir(savePath)
@@ -61,6 +77,7 @@ def crop_dataset(imgpath, scale, windows_width, srcAnn, annotation, cropAnno, sa
         height = img.shape[0]
         width = img.shape[1]
         croped_width = windows_width
+        croped_height = windows_height
         count += 1
         
         boxes = []
@@ -72,10 +89,10 @@ def crop_dataset(imgpath, scale, windows_width, srcAnn, annotation, cropAnno, sa
                 x_center, y_center, w, h = float(point[1])*width, float(point[2])*height, float(point[3])*width, float(point[4])*height
                 boxes.append([x_center, y_center, w, h])
 
-        resizeImg, boxes = zomImg(os.path.join(imgpath, name + '.jpg'), boxes, scale)
+        resizeImg, boxes = zomImg(os.path.join(imgpath, name + '.jpg'), boxes)
         #show_box(resizeImg, boxes)
         
-        img_list, corner_list = slide_crop(resizeImg, croped_width, height, overlap_half=True)
+        img_list, corner_list = slide_crop(resizeImg, croped_width, croped_height, overlap_half=True)
         
         boxes_list = [[] for i in range(len(corner_list))]
         
@@ -98,7 +115,7 @@ def crop_dataset(imgpath, scale, windows_width, srcAnn, annotation, cropAnno, sa
                 h = y_down - y_up
                 
                 if (x_right - x_left) >= box[2]*0.7 and (y_down - y_up) >= box[3]*0.7:
-                    #物件的80%包含在圖片裡
+                    #物件的70%包含在圖片裡
                     rescale_box = []
                     rescale_box.append((x_left + x_right)/2-x)
                     rescale_box.append((y_up + y_down)/2-y)
@@ -121,11 +138,12 @@ def crop_dataset(imgpath, scale, windows_width, srcAnn, annotation, cropAnno, sa
 
 if __name__ == '__main__':
     scale = 1
-    windows_width = 256 
-    imgpath = './fusion_image/test_google/images_whole'
-    srcAnn = './fusion_image/test_google/labels_whole'
-    annotation = './fusion_image/test_google/test.txt'
-    cropAnno = './fusion_image/test_google/labels'
-    savePath = './fusion_image/test_google/images'
+    windows_width = 3840 
+    windows_height = 1561 
+    imgpath = './fusion_image/test_itri/images_whole'
+    srcAnn = './fusion_image/test_itri/labels_whole'
+    annotation = './fusion_image/test_itri/test.txt'
+    cropAnno = './fusion_image/test_itri/labels_test'
+    savePath = './fusion_image/test_itri/images_test'
     
-    crop_dataset(imgpath, scale, windows_width, srcAnn,  annotation, cropAnno, savePath, sub='')
+    crop_dataset(imgpath, windows_width, windows_height, srcAnn,  annotation, cropAnno, savePath)
