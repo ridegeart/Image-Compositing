@@ -28,10 +28,11 @@ Implementation of compositing craters on airport runway.
         3. `dst_path`：Path to save craters after segmentation
         4. `mask_path`：Path to save mask of craters
 ### Runway background
-    | itri  | itri_small  | itri_shadow  | airport_runway  |
-    | ---------- | -----------| -----------| -----------|
-    | Origin Road   | Lower size   | Road with significant tree shadow   | serching from web   |
-    | 21039(w) * 1561(h)   | 1256 * 95   | 15785 * 1561   | 3840 * 2160   |
+
+| itri  | itri_small  | itri_shadow  | airport_runway  |
+| ---------- | -----------| -----------| -----------|
+| Origin Road   | Lower size   | Road with significant tree shadow   | serching from web   |
+| 21039(w) * 1561(h)   | 1256 * 95   | 15785 * 1561   | 3840 * 2160   |
 
 ### Runway Craters Datasets
     - web：`./datasets/image_synthesis_web.py`
