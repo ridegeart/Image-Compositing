@@ -35,6 +35,9 @@ Implementation of compositing craters on airport runway.
 | 21039(w) * 1561(h)   | 1256 * 95   | 15785 * 1561   | 3840 * 2160   |
 
 ### Runway Craters Datasets
-    - web：`./datasets/image_synthesis_web.py`
+- web：`./datasets/image_synthesis_web.py`
+    - Gene craters(fg) onto runway background
+    - Use getCounters to get crater mask
+- google：`./datasets/image_synthesis_google.py`
 
 
