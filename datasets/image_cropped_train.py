@@ -133,7 +133,7 @@ def crop_dataset(imgpath, windows_width, windows_height, srcAnn, annotation, cro
                 if len(boxes) == 0:
                     continue
                 for box in boxes:
-                    f.write('0 '+str(box[0]/croped_width)+' '+str(box[1]/height)+' '+str(box[2]/croped_width)+' '+str(box[3]/height)+'\n')
+                    f.write('0 '+str(box[0]/croped_width)+' '+str(box[1]/croped_height)+' '+str(box[2]/croped_width)+' '+str(box[3]/croped_height)+'\n')
 
 
 if __name__ == '__main__':
