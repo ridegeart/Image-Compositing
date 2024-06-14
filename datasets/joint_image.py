@@ -20,7 +20,7 @@ def init(big_images_path):
         img_info[img_name.split('.')[0]] = [w, h]
 
 # Integrate all detect croped labels into original image
-def get_label_info(labels_path, scale, cur_img_width):
+def get_label_info(labels_path, scale, cur_img_width, cur_img_height):
     # read all croped label
     labels = os.listdir(labels_path)
     for label in labels:
@@ -38,6 +38,8 @@ def get_label_info(labels_path, scale, cur_img_width):
         y = 0.0
         width = 0.0
         height = 0.0
+        cur_big_height = img_info[cur_label_belong][1]
+        cur_big_width = img_info[cur_label_belong][0]
 
         # read one croped label file
         f = open(labels_path + '/' + label, 'r')
@@ -62,17 +64,25 @@ def get_label_info(labels_path, scale, cur_img_width):
             distance_x = 0
             distance_y = 0
             #cur_img_width = 256 #img_info[cur_label_belong][0]
-            cur_img_height = img_info[cur_label_belong][1]
-            step = (scale * 2) -1
+            #cur_img_height = img_info[cur_label_belong][1]
+            step = int(cur_big_width // (cur_img_width/2))
+            stepy = int(cur_big_height // (cur_img_height/2))
+            #step = (scale * 2) -1
             
             # according to [num] mormalized the label
-            distance_x = int(num) // step
+            distance_x = int(num) % step
             distance_y = int(num) // step
-            y = y * cur_img_height #+ distance_y * cur_img_height / 2
-            if int(num) == 8:
+            
+            if distance_y == (stepy-1):
+                y = y * cur_img_height + (img_info[cur_label_belong][1] - cur_img_height)
+            else:
+                y = y * cur_img_height + distance_y * cur_img_height / 2
+            
+            if distance_x == (step-1):
                 x = x * cur_img_width + (img_info[cur_label_belong][0] - cur_img_width)
             else:
                 x = x * cur_img_width + distance_x * cur_img_width / 2
+                
             assert cur_img_width != 0 or cur_img_height != 0 or distance_x != 0 or distance_y != 0, \
                 f'cur_img_width:{cur_img_width}, cur_img_height:{cur_img_height}, distance_x:{distance_x}, distance_y:{distance_y}'
             assert (x / scale) < img_info[cur_label_belong][0] and (y / scale) < cur_img_height, f'{label}, {content}\n w:{img_info[cur_label_belong][0]}, h:{cur_img_height}, x:{x}, y:{y}'
@@ -120,13 +130,14 @@ def save_yolo_label(yolo_labels_path):
 
 
 def joint_main(big_images_path='./fusion_image/val/images_bg',
-               labels_path='/home/training/mmdetection/runs/exp30/labels',
-               yolo_labels_path='/home/training/mmdetection/runs/exp30/labels_croped_fusion/',
-               cur_img_width = 3840,
+               labels_path='/home/training/mmdetection/runs/exp27/labels',
+               yolo_labels_path='/home/training/mmdetection/runs/exp27/labels_croped_fusion/',
+               cur_img_width = 3000,
+               cur_img_height = 1220,
                scale=1):
     print(f'融合图片, 原图片路径：{big_images_path}\n小图检测的txt结果路径：{labels_path}\n数据融合后txt结果路径：{yolo_labels_path}')
     init(big_images_path)
-    get_label_info(labels_path, scale, cur_img_width)
+    get_label_info(labels_path, scale, cur_img_width, cur_img_height)
     save_yolo_label(yolo_labels_path)
 
 joint_main()
