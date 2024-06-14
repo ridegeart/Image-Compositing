@@ -2,11 +2,11 @@ import cv2
 import os
 import numpy as np
 
-def convert_yolo_to_xyminmax(yolo_bbox):
+def getVOCNumbers(cur_big_width, cur_big_height, yolo_bbox):
     """Converts a YOLO bounding box format (x, y, w, h) to xmin, ymin, xmax, ymax format."""
     x, y, w, h = yolo_bbox
-    width = 20970
-    height = 1561
+    width = cur_big_width
+    height = cur_big_height
     xmin = int((x - w / 2)*width)
     ymin = int((y - h / 2)*height)
     xmax = int((x + w / 2)*width)
@@ -74,14 +74,14 @@ def remove_overlapping_bboxes(bboxes, iou_threshold=0.5):
                 #break
     return bboxes
     
-def remove_overlap_boxes_txt(bboxes, iou_threshold=0.5):
+def remove_overlap_boxes_txt(cur_big_width, cur_big_height, bboxes, iou_threshold=0.5):
     
     new_bboxes = bboxes
 
     for i in range(len(bboxes)):
         for j in range(len(bboxes) - 1, i, -1):
-            bboxes1 = convert_yolo_to_xyminmax(bboxes[i])
-            bboxes2 = convert_yolo_to_xyminmax(bboxes[j])
+            bboxes1 = getVOCNumbers(cur_big_width, cur_big_height, bboxes[i])
+            bboxes2 = getVOCNumbers(cur_big_width, cur_big_height, bboxes[j])
             xmin1, ymin1, xmax1, ymax1 = bboxes1
             xmin2, ymin2, xmax2, ymax2 = bboxes2
             iou_score = iou(bboxes1, bboxes2)
@@ -98,10 +98,7 @@ def remove_overlap_boxes_txt(bboxes, iou_threshold=0.5):
                 x = xmin + w/2
                 y = ymin + h/2
                 
-                width = 20970
-                height = 1561
-                
-                bboxes[i] = [x/width, y/height, w/width, h/height]
+                bboxes[i] = [x/cur_big_width, y/cur_big_height, w/cur_big_width, h/cur_big_height]
                 bboxes.pop(j)
                 #break
 

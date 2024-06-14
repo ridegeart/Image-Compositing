@@ -122,7 +122,7 @@ def save_yolo_label(yolo_labels_path):
             assert x < 1.0 and y < 1.0 and width < 1.0 and height <= 1.0, f'{key} {index}\nx:{x}, y:{y}, width:{width}, height:{height}'
             #content += f'{index} {x} {y} {width} {height}\n'
         print(key, len(bboxes))
-        non_overlapping_bboxes = remove_overlap_boxes_txt(bboxes)
+        non_overlapping_bboxes = remove_overlap_boxes_txt(cur_big_width, cur_big_height, bboxes)
         with open(yolo_label_path, 'w') as f:
             for bbox in non_overlapping_bboxes:
                 f.write('0 '+ ' '.join([str(val) for val in bbox]) + '\n')
