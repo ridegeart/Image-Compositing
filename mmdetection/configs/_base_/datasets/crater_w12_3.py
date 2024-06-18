@@ -5,7 +5,7 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 # img_scale = [(640, 640), (720,720), (800, 800), (880, 880)]
 # img_scale = [(320, 320), (480,480), (560,560), (640, 640), (720,720), (800, 800), (880, 880)]
-img_scale = [ (320,320), (416,416),  (640, 640)]
+img_scale = [(640, 260), (720,300), (1280, 525)]
 train_pipeline = [  
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -24,7 +24,7 @@ test_pipeline = [
         type='MultiScaleFlipAug',
         # img_scale=[(640, 640),(720, 720),(960,960)],
         # img_scale = [(640, 640), (720,720), (800, 800), (880, 880)],
-        img_scale = (640, 640),
+        img_scale = (720, 720),
         # img_scale = (1280, 1280),
         flip=True,
         transforms=[

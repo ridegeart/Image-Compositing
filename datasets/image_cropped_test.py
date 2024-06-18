@@ -21,17 +21,13 @@ def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
     stepx = int(width / stridex)
     stepy = int(height / stridey)
     
-    for r in range(stepy-1): #stepy-1
-        starty = r * stridey
-        for c in range(stepx-1):
-            startx = c * stridex
+    for r in range(stepy): # 0~stepy-1-1
+        starty = min(r * stridey, height - kernelh)
+        for c in range(stepx): # 0~stepx-1-1
+            startx = min(c * stridex, width - kernelw)
             corner_list.append((startx,starty))
             img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
-            
-    starty = 0 * stridey
-    startx = width - kernelw
-    corner_list.append((startx,starty))
-    img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
+    
     return img_list,corner_list
 
 def crop_dataset(imgpath, scale, annotation, savePath, sub=''):

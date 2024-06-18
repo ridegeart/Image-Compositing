@@ -31,32 +31,12 @@ def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
     stepx = int(width / stridex)
     stepy = int(height / stridey)
     
-    for r in range(stepy-1):
-        starty = r * stridey
-        for c in range(stepx-1):
-            startx = c * stridex
+    for r in range(stepy): # 0~stepy-1-1
+        starty = min(r * stridey, height - kernelh)
+        for c in range(stepx): # 0~stepx-1-1
+            startx = min(c * stridex, width - kernelw)
             corner_list.append((startx,starty))
             img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
-    
-    if (width / stridex) % 1 > 0.01:
-        print('x',(width / stridex))
-        for r in range(stepy-1):
-            starty = r * stridey
-            startx = width - kernelw
-            corner_list.append((startx,starty))
-            img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
-    if (height / stridey) % 1 > 0.01:
-        print(height,stridey,(height / stridey))
-        for c in range(stepx-1):
-            startx = c * stridex
-            starty = height - kernelh
-            corner_list.append((startx,starty))
-            img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
-    if (width / stridex) % 1 > 0.01 and (height / stridey) % 1 > 0.01:
-        starty = height - kernelh
-        startx = width - kernelw
-        corner_list.append((startx,starty))
-        img_list.append(img[starty:starty+kernelh, startx:startx+kernelw,:])
     
     return img_list,corner_list
 
