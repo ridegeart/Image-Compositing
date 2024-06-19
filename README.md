@@ -11,6 +11,13 @@ Implementation of compositing craters on airport runway.
     - web：https://universe.roboflow.com/rdd-jqqq8/bomb-craters-low/dataset/1
     - google：https://universe.roboflow.com/rdd-jqqq8/google_earth/dataset/1
     - Zipped at `./datasets`
+        ```
+        .
+        ├── datasets
+        │   └── web
+        │       ├── train
+        │       └── test
+        ```
 2. Craters prepocessing (source of craters)
     - web：`./datasets/web_craters.py`  
         - Perspective Transform
@@ -19,16 +26,26 @@ Implementation of compositing craters on airport runway.
         - parameter settings：
         1. `src_path`：Origin craters images from Robotflow
         2. `gnd_path`：Origin craters images from Robotflow
-        3. `dst_path`：Path to save perspective transformed images-default  `./{mod}/images_seg`
-        4. `remove_bg_path`：Path to save Removed Background images-default  `./datasets/web_crater/{mod}/images_remove_bg`
+        3. `dst_path`：Path to save perspective transformed images-default  `images_seg`
+        4. `remove_bg_path`：Path to save Removed Background images-default  `images_remove_bg`
+        ```
+            .
+            ├── datasets
+            │   └── web
+            │       ├── train
+            │       │  ├── images_seg
+            │       │  └── images_remove_bg
+            │       └── test
+        ```
     - google：：`./datasets/web_craters.py`  
         - Get craters by read segmentation label
         - Use getCounters to get crater mask
         - parameter settings：
         1. `src_path`：Origin craters images from Robotflow
         2. `gnd_path`：Origin craters images from Robotflow
-        3. `dst_path`：Path to save craters after segmentation-default  `./datasets/google_crater/{mod}/images_seg`
-        4. `mask_path`：Path to save mask of craters-default  `./datasets/google_crater/{mod}/mask`
+        3. `dst_path`：Path to save craters after segmentation-default  `images_seg`
+        4. `mask_path`：Path to save mask of craters-default  `mask`
+
 ### Runway background
 
 | itri  | itri_small  | itri_shadow  | airport_runway  |
@@ -56,6 +73,16 @@ Gene craters(fg) onto runway background.
     1. `bg_src`：choose from : itri/itri_shadow/airport_runway
     2. `GSD`：Decide craters size from bg's GSD.   
     If 1pix = 1cm (real) , GSD = 1； 1pix = 1.6cm (real) , GSD = 1.6
+    ```
+            .
+            ├── datasets
+            │   ├── web
+            │   └── fusion_images
+            │       ├── train_itri
+            │       │  ├── images_whole
+            │       │  └── labels_whole
+            │       └── test_itri
+    ```
 - google：`./datasets/image_synthesis_google.py`  
     - same as web except crater source
     - `dst_path`：Path to save images-default `./{mod}_{bg_src}/images_whole`
