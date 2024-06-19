@@ -1,6 +1,0 @@
-gdown --id '1duQU7xqXRsOSPYeOR0zLiSA8g_LCFzoV'
-
-
-sudo rm -rf /usr/local/cuda #刪除原鏈結
-sudo ln -s /usr/local/cuda-10.1 /usr/local/cuda #建造指向指定的CUDA版本 /usr/local/cuda-版本
-nvcc -V #查看當前使用的cuda 版本
