@@ -11,13 +11,6 @@ Implementation of compositing craters on airport runway.
     - web：https://universe.roboflow.com/rdd-jqqq8/bomb-craters-low/dataset/1
     - google：https://universe.roboflow.com/rdd-jqqq8/google_earth/dataset/1
     - Zipped at `./datasets`
-        ```
-        .
-        ├── datasets
-        │   └── web
-        │       ├── train
-        │       └── test
-        ```
 2. Craters prepocessing (source of craters)
     - web：`./datasets/web_craters.py`  
         - Perspective Transform
@@ -28,15 +21,6 @@ Implementation of compositing craters on airport runway.
         2. `gnd_path`：Origin craters images from Robotflow
         3. `dst_path`：Path to save perspective transformed images-default  `images_seg`
         4. `remove_bg_path`：Path to save Removed Background images-default  `images_remove_bg`
-        ```
-            .
-            ├── datasets
-            │   └── web
-            │       ├── train
-            │       │  ├── images_seg
-            │       │  └── images_remove_bg
-            │       └── test
-        ```
     - google：：`./datasets/web_craters.py`  
         - Get craters by read segmentation label
         - Use getCounters to get crater mask
@@ -45,6 +29,15 @@ Implementation of compositing craters on airport runway.
         2. `gnd_path`：Origin craters images from Robotflow
         3. `dst_path`：Path to save craters after segmentation-default  `images_seg`
         4. `mask_path`：Path to save mask of craters-default  `mask`
+```
+    .
+    ├── datasets
+    │   └── web
+    │       ├── train
+    │       │  ├── images_seg
+    │       │  └── images_remove_bg
+    │       └── test
+```
 
 ### Runway background
 
@@ -101,15 +94,14 @@ Gene craters(fg) onto runway background.
 2. `sliding_window`：True or Flase , making cropped images or not
 
 ### Sliding windows
-Using sliding windows with overlap = 50% to cropped big runway images to small size images
-
-- `imgpath`：big runway images path - default `google`
-- `srcAnn`：True or Flase , making cropped images or not
-- `imgpath`：choose from : itri/itri_shadow/airport_runway
-- `srcAnn`：True or Flase , making cropped images or not
-- `imgpath`：choose from : itri/itri_shadow/airport_runway
-- `srcAnn`：True or Flase , making cropped images or not
-- `imgpath`：choose from : itri/itri_shadow/airport_runway
-- `srcAnn`：True or Flase , making cropped images or not
+Using sliding windows with overlap = 50% to cropped big runway craters images to small size images
+- 
+- `windows_width`：sliding windows size - defalut `3000` 
+- `windows_height`：sliding windows size - defalut `1220` 
+- `imgpath`：big runway craters images path-refer to **Runway Craters Datasets**
+- `srcAnn`：big runway craters labels path-refer to **Runway Craters Datasets**
+- `annotation`：big runway craters images name list - defalut `./{mod}_{bg_src}/{mod}.txt` 
+- `cropAnno`：path saving cropped images - defalut `images` 
+- `savePath`：path saving cropped labels - defalut `labels` 
 
 
