@@ -24,7 +24,7 @@ def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
     
     return img_list,corner_list
 
-def crop_dataset(imgpath, windows_width, windows_height, annotation, savePath):
+def crop_dataset(imgpath, windows_width, windows_height, savePath):
 
     if os.path.exists(savePath) is False:
         os.mkdir(savePath)
@@ -32,7 +32,7 @@ def crop_dataset(imgpath, windows_width, windows_height, annotation, savePath):
     count = 0
     name = os.path.basename(imgpath)[:-4]#'20240420_bg'
     
-    img = cv2.imread(os.path.join(imgpath))
+    img = cv2.imread(imgpath)
     height = img.shape[0]
     width = img.shape[1]
     croped_width = windows_width
@@ -50,7 +50,6 @@ if __name__ == '__main__':
     windows_width = 3000 
     windows_height = 1220 
     imgpath = './fusion_image/val'
-    annotation = './fusion_image/val/val.txt'
     savePath = './fusion_image/val/images'
     
-    crop_dataset(imgpath, windows_width, windows_height, annotation, savePath)
+    crop_dataset(imgpath, windows_width, windows_height, savePath)

@@ -18,7 +18,7 @@ def init(big_images_path):
         img_info[image_name.split('.')[0]] = [w, h]
 
 # Integrate all detect croped labels into original image
-def get_label_info(labels_path, scale, cur_img_width, cur_img_height):
+def get_label_info(labels_path, cur_img_width, cur_img_height):
     # read all croped label
     labels = os.listdir(labels_path)
     for label in labels:
@@ -102,7 +102,7 @@ def get_label_info(labels_path, scale, cur_img_width, cur_img_height):
         child_width.clear()
         child_height.clear()
 
-def output_result(bboxes):
+def output_result(bboxes, path, json_data):
     for key in all_info:
         cur_big_height = img_info[key][1]
         cur_big_width = img_info[key][0]
@@ -116,26 +116,16 @@ def output_result(bboxes):
             p4 = [xmax,ymin]
             bboxes_VOC.append([p1, p2, p3, p4])
 
-        # Create the JSON structure
-        json_data = {
-            "result": {
-                "potholes": [
-                    {
-                        "bbox": bboxes_VOC
-                    }
-                ]
-            },
-            "status": {
-                "code": 1,
-                "message": "Get image successfully."
-            },
-            "version": "XXXXXX"
-        }
+        if bboxes_VOC is not None:
+            # Create the JSON structure
+            json_data['result']["potholes"][0]["bbox"] = bboxes_VOC
+            json_data['status']["message"] = "Get image successfully."
+            json_data['status']["code"] = 1
 
     return json_data
 
 # todo: transform to yolo
-def save_yolo_label(yolo_labels_path):
+def save_yolo_label(yolo_labels_path, data):
     if os.path.exists(yolo_labels_path) is False:
         os.mkdir(yolo_labels_path)
     for key in all_info:
@@ -150,23 +140,21 @@ def save_yolo_label(yolo_labels_path):
             height = height / cur_big_height
             bboxes.append([x, y, width, height])
             assert x < 1.0 and y < 1.0 and width < 1.0 and height <= 1.0, f'{key} {index}\nx:{x}, y:{y}, width:{width}, height:{height}'
-            #content += f'{index} {x} {y} {width} {height}\n'
-        #print(key, len(bboxes))
+    
         non_overlapping_bboxes = remove_overlap_boxes_txt(cur_big_width, cur_big_height, bboxes)
         with open(yolo_label_path, 'w') as f:
             for bbox in non_overlapping_bboxes:
                 f.write('0 '+ ' '.join([str(val) for val in bbox]) + '\n')
                 #f.write(content)
 
-        result = output_result(non_overlapping_bboxes)
+        result = output_result(non_overlapping_bboxes, None, data)
         return result
 
-def joint_main(big_images_path, labels_path, yolo_labels_path, cur_img_width, cur_img_height,
-               scale=1):
+def joint_main(big_images_path, labels_path, yolo_labels_path, cur_img_width, cur_img_height, data):
     print(f'融合图片, 原图片路径：{big_images_path}\n小图检测的txt结果路径：{labels_path}\n数据融合后txt结果路径：{yolo_labels_path}')
     init(big_images_path)
-    get_label_info(labels_path, scale, cur_img_width, cur_img_height)
-    predict_result = save_yolo_label(yolo_labels_path)
+    get_label_info(labels_path, cur_img_width, cur_img_height)
+    predict_result = save_yolo_label(yolo_labels_path, data)
     return predict_result
 
 if __name__ == '__main__':
@@ -175,5 +163,4 @@ if __name__ == '__main__':
     yolo_labels_path='/home/training/mmdetection/runs/exp27/labels_croped_fusion/',
     cur_img_width = 3000,
     cur_img_height = 1220,
-    joint_main(big_images_path, labels_path, yolo_labels_path, cur_img_width, cur_img_height,
-                scale=1)
+    joint_main(big_images_path, labels_path, yolo_labels_path, cur_img_width, cur_img_height)
