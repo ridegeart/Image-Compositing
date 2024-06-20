@@ -195,3 +195,6 @@ python ./tools/train.py ./configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py --w
     - input xml files 
     - `tools/all_box.py` ： summarize nums of all size
     - `tools/error_box.py` ： missed detect box
+
+3. draw bboxes
+    - `tools/draw_box.py`
