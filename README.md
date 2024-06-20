@@ -34,15 +34,16 @@ pip install -v -e .
 ## Package predict model (model.py)
 ```python
 #載入模型
-def run_model():
-    config_file = './mmdetection/configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py'
-    checkpoint_file = './mmdetection/checkpoint/epoch_4.pth'
+class mmdet(object):
+    def __init__(self, config_file = './mmdetection/configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py', 
+                checkpoint_file = './mmdetection/checkpoint/epoch_4.pth', 
+                conf_thres = 0.5, iou_thres = 0.5):
     ...
 
 # 模型預測的function
 def predict(path):
     #load models
-    model = run_model()
+    model = mmdet()
     ...
 ```
 
