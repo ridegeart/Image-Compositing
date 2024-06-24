@@ -40,11 +40,11 @@ def crop_dataset(imgpath, windows_width, windows_height, savePath):
     count += 1
 
     img_list, corner_list = slide_crop(img, croped_width, croped_height, overlap_half=True)
-
+    print(f'Sliding windows...Saved at {savePath}')
     for num,img in enumerate(img_list):
         saveImgPath = savePath + '/' + '{}_{}.jpg'.format(name, num)
-        print(saveImgPath)
         cv2.imwrite(saveImgPath, img)
+    print(f'Sliding windows Finished!')
 
 if __name__ == '__main__':
     windows_width = 3000 
