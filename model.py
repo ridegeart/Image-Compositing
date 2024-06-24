@@ -82,19 +82,18 @@ def status(path, bbox=None):
                     "version": "XXXXXX"
                 }
         return json_data
-    
-def predict(path):
-    # load models
-    model = mmdet()
 
+def predict(model,path):
+    
     # cropped input image
     windows_width = 3000
     windows_height = 1220
 
     image_name = os.path.basename(path)
-    print(image_name)
+    print(f'Read {image_name} ...')
 
     if not os.path.exists(path) or not image_name.endswith(('.bmp', '.dib', '.png', '.jpg', '.jpeg', '.pbm', '.pgm', '.ppm', '.tif', '.tiff')):
+        print(status(path)['status'])
         return status(path)['status']
     else:
         data = status(None,path)
