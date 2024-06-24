@@ -54,7 +54,6 @@ def remove_overlapping_bboxes(bboxes, iou_threshold=0.5):
     Returns:
         list of lists: The updated list of bounding boxes after removing overlaps.
     """
-    remain_bbox = np.empty(len(bboxes), dtype = float, order = 'C')
     # Iterate through all bounding boxes
     for i in range(len(bboxes)):
         for j in range(len(bboxes) - 1, i, -1):
@@ -70,13 +69,11 @@ def remove_overlapping_bboxes(bboxes, iou_threshold=0.5):
                 conf = max(conf1, conf2) 
                 
                 bboxes[i] = [xmin, ymin, xmax, ymax, conf]
-                del bboxes[j]
+                bboxes.pop(j)
                 #break
     return bboxes
     
 def remove_overlap_boxes_txt(cur_big_width, cur_big_height, bboxes, iou_threshold=0.5):
-    
-    new_bboxes = bboxes
 
     for i in range(len(bboxes)):
         for j in range(len(bboxes) - 1, i, -1):

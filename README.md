@@ -43,7 +43,7 @@ Implementation of compositing craters on airport runway.
 
 | itri  | itri_small  | itri_shadow  | airport_runway  |
 | ---------- | -----------| -----------| -----------|
-| Origin Road   | Lower size   | Road with significant tree shadow   | serching from web   |
+| Origin Road   | Resize fit GSD=16.7   | Road with significant tree shadow   | serching from web   |
 | 21039(w) * 1561(h)   | 1256 * 95   | 15785 * 1561   | 3840 * 2160   |
 | runway-top-view_raw.tif   | image_airport.jpg   | 20240420_bg3.jpg   | Airport-plane-runway-top-view_3840x2160.jpg   |
 
@@ -191,6 +191,12 @@ python ./tools/train.py ./configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py --w
         cd mmdetection  
         python ./tools/analysis_tools/eval_metric.py ./configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py ./results_mmdet/results_itri_bg.pkl --eval mAP
         ```
+    - If trainning with cropped images , want to calculate mAP with jointed pkl file：
+        - parameter settings：`./mmdetection/configs/_base_/datasets/crater_w12_3.py`
+            1. test.dataroot.ann_file：big runway craters images name list path
+            2. test.dataroot.img_prefix：big runway craters images path
+        - `./datasets/test_XXX/label_xml`：should be big runway craters labels
+
 2. accuracy of different size boxes
     - input xml files 
     - `tools/all_box.py` ： summarize nums of all size
