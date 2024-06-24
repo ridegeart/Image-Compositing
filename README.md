@@ -41,23 +41,25 @@ class mmdet(object):
     ...
 
 # 模型預測的function
-def predict(path):
-    #load models
-    model = mmdet()
+def predict(model,path):
+
     ...
 ```
 
 ## Flask API (run.py)
 ```python
 import model
+
+# 載入模型
+mmdet_model = model.mmdet()
+
 @app.route('/pothole_recognize', methods=['POST'])
 def postInput():
     # 取得前端傳過來的數值
     values = request.form
     img_path = values['image_path']
-    # 建立模型，預測並返回結果
-    result = model.predict(img_path)
-    print(result)
+    # 預測並返回結果
+    result = model.predict(mmdet_model, img_path)
 
     return jsonify(result)
 ```

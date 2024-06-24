@@ -6,6 +6,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+
+# 載入模型
 mmdet_model = model.mmdet()
 print('Waiting POST...')
 
