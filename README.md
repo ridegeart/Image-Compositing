@@ -15,16 +15,39 @@ Implement ML model on web server through Flask.
 └── test.py
 ```
 
-## Environment Build
+## Environment Build-cuda 11.1
+#copy and build new environment
+```
+conda env create -f environment-cuda111.yml
+```
+#cuda >= 11.1
+```
+pip install -r requirements-torch1.8.txt
+```
+#mmdetection v2.25.0
+```
+cd mmdetection  
+pip install -r requirements/build.txt  
+pip install -v -e .  
+```
+
+## Environment Build-cuda 11.8
 #copy and build new environment
 ```
 conda env create -f environment.yml
 ```
-#cuda >= 11.1
+#cuda == 11.8
 ```
-pip install -r requirements.txt
+pip install torch==2.0.0 torchvision==0.15.1 torchaudio==2.0.1 --index-url https://download.pytorch.org/whl/cu118
 ```
-#mmdetection v2.25.0
+#mmdetection
+```
+pip install openmim    
+mim install mmcv-full
+mim install mmcls
+pip install mmcv==1.6.0
+```
+#Build mmdetection
 ```
 cd mmdetection  
 pip install -r requirements/build.txt  
