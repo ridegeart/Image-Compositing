@@ -218,13 +218,8 @@ python ./tools/train.py ./configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py --w
     - `tools/all_box.py` ： summarize nums of all size
     - `tools/error_box.py` ： missed detect box
     - parameter settings：
-<<<<<<< HEAD
         1. `gt_folder` ： ground truth label folder
         2. `pred_folder` ： prediction result folder
-=======
-        1. `gt_folder` ： 
-        2. `pred_folder` ： 
->>>>>>> 1a54bfcdafb33f4c75325c328458566b3e14d0a8
         3. `width`/`height` ： input images size
 
 3. draw bboxes
