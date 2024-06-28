@@ -51,8 +51,7 @@ Implementation of compositing craters on airport runway.
 | Origin Road   | Resize fit GSD=16.7   | Road with significant tree shadow   | serching from web   |
 | 21039(w) * 1561(h)   | 1256 * 95   | 15785 * 1561   | 3840 * 2160   |
 | runway-top-view_raw.tif   | image_airport.jpg   | 20240420_bg3.jpg   | Airport-plane-runway-top-view_3840x2160.jpg   |
-|    | ![image](https://github.com/ridegeart/Image-Compositing/blob/main/datasets/image_airport.jpg)   | ![image](https://github.com/ridegeart/Image-Compositing/blob/main/datasets/20240420_bg3.jpg)   | ![Airport-plane-runway-top-view_3840x2160](https://github.com/ridegeart/Image-Compositing/assets/73794853/b55af0ea-048b-4f3d-95fe-3b1fad34e1c6)
-   |
+|    | ![image](https://github.com/ridegeart/Image-Compositing/blob/main/datasets/image_airport.jpg)   | ![image](https://github.com/ridegeart/Image-Compositing/blob/main/datasets/20240420_bg3.jpg)   | ![Airport-plane-runway-top-view_3840x2160](https://github.com/ridegeart/Image-Compositing/assets/73794853/b55af0ea-048b-4f3d-95fe-3b1fad34e1c6)|
 
 ### Full-Runway Craters Datasets
 Gene craters(fg) onto runway background.  
