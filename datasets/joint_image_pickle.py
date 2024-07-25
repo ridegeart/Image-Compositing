@@ -52,7 +52,7 @@ def get_label_info(result_path, name_file_list, cur_img_width, cur_img_height):
                 ymax = float(box[3])
                 pass
                 assert confidence != -1 or xmin != -1.0 or ymin != -1.0 or xmax != -1.0 or ymax != -1.0, \
-                    f'class_index:{class_index}, x:{x}, y:{y}, width:{width}, height:{height}'
+                    f'class_index:{class_id}, xmin:{xmin}, ymin:{ymin}, xmax:{xmax}, ymax:{ymax}'
                 
                 num = names[i].split('_')[-1]
                 distance_x = 0
@@ -77,12 +77,14 @@ def get_label_info(result_path, name_file_list, cur_img_width, cur_img_height):
                 child_ymin.append(ymin)
                 child_xmax.append(xmax)
                 child_ymax.append(ymax)
+
+            if cur_label_belong not in all_info:
+                all_info[cur_label_belong] = []
+
             # todo: according to cur_label_belong save in all_info
-            for confi, xmin, ymin, xmax, ymax in zip(child_confidence, child_xmin, child_ymin, child_xmax, child_ymax):
-                if cur_label_belong not in all_info:
-                    all_info[cur_label_belong] = [[xmin, ymin, xmax, ymax, confi]]
-                else:
-                    all_info[cur_label_belong].append([xmin, ymin, xmax, ymax, confi])
+            for confi, xmin, ymin, xmax, ymax in zip(child_confidence, child_xmin, child_ymin, child_xmax, child_ymax):  
+                all_info[cur_label_belong].append([xmin, ymin, xmax, ymax, confi])
+                
             child_confidence.clear()
             child_xmin.clear()
             child_ymin.clear()
@@ -102,6 +104,8 @@ def save_new_pickle(joint_name_list, joint_path):
         bboxes = all_info[name]
         new_bboxes = remove_overlapping_bboxes(bboxes)
         new_bboxes = np.array(new_bboxes, dtype='float32')
+        if new_bboxes.size == 0:
+            new_bboxes =  np.empty((0, 5), dtype='float32')
         image_results = [new_bboxes]
         combined_results.append(image_results.copy())
 

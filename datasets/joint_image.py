@@ -69,7 +69,7 @@ def get_label_info(labels_path, cur_img_width, cur_img_height):
             width = width * cur_img_width
             height = height * cur_img_height
             
-            assert x < icur_big_width and y < cur_big_height, f'{label}, {content}\n w:{cur_big_width}, h:{cur_big_height}, x:{x}, y:{y}'
+            assert x < cur_big_width and y < cur_big_height, f'{label}, {content}\n w:{cur_big_width}, h:{cur_big_height}, x:{x}, y:{y}'
             assert x != 0.0 or y != 0.0 or width != 0.0 or height != 0.0, f'x:{x}, y:{y}, width:{width}, height:{height}'
             child_class_index.append(class_index)
             child_x.append(x)
