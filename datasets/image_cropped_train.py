@@ -2,23 +2,7 @@
 import cv2
 import os
 import codecs
-
-def zomImg(impath, boxes):
-    img = cv2.imread(impath)
-    height, width, c = img.shape
-
-    resizeImg = cv2.resize(img,(int(width),int(height)),interpolation=cv2.INTER_LINEAR)
-    for i in range(len(boxes)):
-        nw = boxes[i][2]
-        nh = boxes[i][3]
-        centerx = boxes[i][0]
-        centery = boxes[i][1]
-        boxes[i][0] = (centerx) if (centerx) > 0 else 0
-        boxes[i][1] = (centery) if (centery) > 0 else 0
-        boxes[i][2] = nw
-        boxes[i][3] = nh
-
-    return resizeImg, boxes
+import tqdm
 
 #overlap_half=True滑动窗口切图，每次有一半区域重叠，这时候x方向的步长就是窗口宽度的一半，y方向的步长是窗口高度的一半，stridex和stridey参数将不再起作用
 def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
@@ -30,7 +14,7 @@ def slide_crop(img, kernelw, kernelh, overlap_half=True, stridex=0, stridey=0):
     corner_list = []
     stepx = int(width / stridex)
     stepy = int(height / stridey)
-    
+
     for r in range(stepy): # 0~stepy-1-1
         starty = min(r * stridey, height - kernelh)
         for c in range(stepx): # 0~stepx-1-1
@@ -68,11 +52,8 @@ def crop_dataset(imgpath, windows_width, windows_height, srcAnn, annotation, cro
                 class_idx = int(point[0])
                 x_center, y_center, w, h = float(point[1])*width, float(point[2])*height, float(point[3])*width, float(point[4])*height
                 boxes.append([x_center, y_center, w, h])
-
-        resizeImg, boxes = zomImg(os.path.join(imgpath, name + '.jpg'), boxes)
-        #show_box(resizeImg, boxes)
         
-        img_list, corner_list = slide_crop(resizeImg, croped_width, croped_height, overlap_half=True)
+        img_list, corner_list = slide_crop(img, croped_width, croped_height, overlap_half=True)
         
         boxes_list = [[] for i in range(len(corner_list))]
         
@@ -103,9 +84,9 @@ def crop_dataset(imgpath, windows_width, windows_height, srcAnn, annotation, cro
                     rescale_box.append(h)
                     boxes_list[i].append(rescale_box)
 
-        for num,img in enumerate(img_list):
+        print(f'Sliding windows...Saved Images at {savePath}, labels at {cropAnno}')
+        for num,img in tqdm.tqdm(enumerate(img_list)):
             saveImgPath = savePath + '/' + '{}_{}.jpg'.format(name, num)
-            print(saveImgPath)
             cv2.imwrite(saveImgPath, img)
             
             with codecs.open(cropAnno + '/' + '{}_{}.txt'.format(name, num) ,'w',encoding='utf-8') as f:
