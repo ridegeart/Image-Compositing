@@ -5,11 +5,11 @@ img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 # img_scale = [(640, 640), (720,720), (800, 800), (880, 880)]
 # img_scale = [(320, 320), (480,480), (560,560), (640, 640), (720,720), (800, 800), (880, 880)]
-img_scale = [(640, 260), (720,300), (1280, 525)]
+img_scale = [(640, 260), (720,300), (1280, 525), (1500, 610)]
 train_pipeline = [  
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=img_scale, multiscale_mode='value', keep_ratio=True),
+    dict(type='Resize', img_scale= (1500, 610), multiscale_mode='value', keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
     # dict(type='Mosaic', img_scale=img_scale, pad_val=114.0),
     # dict(type='Rotate')
@@ -24,8 +24,8 @@ test_pipeline = [
         type='MultiScaleFlipAug',
         # img_scale=[(640, 640),(720, 720),(960,960)],
         # img_scale = [(640, 640), (720,720), (800, 800), (880, 880)],
-        img_scale = (720, 720),
-        # img_scale = (1280, 1280),
+        img_scale= (1500, 610), #test dataset
+        # img_scale = (720, 720), #test偽裝墊
         flip=True,
         transforms=[
             dict(type='Resize', keep_ratio=True),

@@ -10,6 +10,7 @@ Implementation of compositing craters on airport runway.
 1. Craters：dowload from robotflow
     - web：https://universe.roboflow.com/rdd-jqqq8/bomb-craters-low/dataset/1
     - google：https://universe.roboflow.com/rdd-jqqq8/google_earth/dataset/1
+    - Download VOC format
     - Zip at `./datasets`
 2. Craters prepocessing (source of craters)
     - web：`./datasets/web_crater.py`  
@@ -60,6 +61,7 @@ Gene craters(fg) onto runway background.
 3. Cutout fg mask on ROI of bg
 4. Add 1. and 3.
 5. Put the composited ROI onto origin runway bg
+6. Save Images and Labels
 
 - web：`./datasets/image_synthesis_web.py`
     - Gene train/test Full-Runway + web craters datasets.
@@ -102,6 +104,12 @@ Gene craters(fg) onto runway background.
 
 ### Sliding windows  
 Performing detection over smaller slices of the Full-Runway Craters image and then merging the sliced predictions on the original image.
+
+| image_cropped_train  | image_cropped_test  |
+| -------------------- | ------------------- |
+| images with gts      | images without gts  |
+| Build train/test datasets  | Build predeict img  |
+
 - sliding windows overlap = 50% means stridex/stridey length is half of windows width/windows height.
 - calculate crater area inside the windows if intersect area > 70%, build label in this windows.
 - `windows_width`：sliding windows width - defalut `3000` 
@@ -146,6 +154,8 @@ pip install -v -e .
 - parameter settings：
     1. data_root : full path of datasets. ex：`D:/xx/xx/datasets/`
     2. data.ann_file/img_prefix data_root： train/test/val images name list + dir
+- trainning settings：
+    1. input image size：(1500,610)
 - build work dir  ：  `./mmdetection/work_dirs/exp/`
 ### Training
 ```
@@ -157,14 +167,25 @@ python ./tools/train.py ./configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py --w
 | ---------- | -----------| -----------| -----------| 
 | mmdetection built-in    | pkl   | all images result  | [class_id,VOC,confidence]  |
 | Inference file   | txt   | each images one files   | [class_id,YOLO] | 
-- input images size：`./mmdetection/configs/_base_/datasets/crater_w12_3.py`, defult = (720, 720)
+
+- input images size：`./mmdetection/configs/_base_/datasets/crater_w12_3.py`
+
+    | train_pipeline     | test_pipeline  |
+    | ------------------ | -------------- |
+    | (1500,610)         | Tranning/Inference  |
+    |                    | (1500,610)/(720,720)  |
+
 ### mmdetection built-in 
 - test config settings：`./mmdetection/configs/_base_/datasets/crater_w12_3.py`
+    - parameter settings：
+        1. data_root : full path of datasets. ex：`D:/xx/xx/datasets/`
+        2. data.ann_file/img_prefix data_root： train/test/val images name list + dir
     ```
     cd mmdetection  
     python tools/test.py configs/swin/mask_rcnn_swin-t-p4-w7_fpn_1x_coco.py ./work_dirs/exp6/last.pth --out results_mmdet/results_val.pkl
     ```  
     if trainning with sliding windows , merging the sliced predictions to the original image than analysis the mAP.
+    
 - merge predict result ：`./datasets/joint_image_pickle.py`
     - calculate bbox_iou, delete objects overlap > 50%
     - .pkl file each object format：[xmin, ymin, xmax, ymax, confidence]
